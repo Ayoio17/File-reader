@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+using namespace std;
+
+struct Ayo
+{
+    string word;
+    int occurrence;
+};
+
+void toLowercase(string &str)
+{
+    for (char &c : str)
+    {
+        c = tolower(c);
+    }
+}
+
+int main()
+{
+    ifstream inputFile("words.txt");
+    if (!inputFile)
+    {
+        cerr << "Error: Can't open file." << endl;
+        return 1;
+    }
+
+    string word;
+    vector<Ayo> myWords;
+
+    while (getline(inputFile, word))
+    {
+        toLowercase(word);
+
+        bool found = false;
+        for (auto &entry : myWords)
+        {
+            if (entry.word == word)
+            {
+                entry.occurrence++;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            Ayo newWord = {word, 1};
+            myWords.push_back(newWord);
+        }
+    }
+
+    inputFile.close();
+
+    for (const auto &entry : myWords)
+    {
+        cout << entry.word << " " << entry.occurrence << endl;
+    }
+
+    return 0;
+}
